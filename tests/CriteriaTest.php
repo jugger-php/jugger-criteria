@@ -12,7 +12,7 @@ use jugger\query\criteria\BetweenCriteria;
 
 class CriteriaTest extends TestCase
 {
-    public function testName()
+    public function testGeneral()
     {
         // WHERE (col1 = 1 AND col2 LIKE '%2%') OR (col3 > 3 AND col4 < 4)
         //
