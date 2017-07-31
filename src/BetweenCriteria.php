@@ -9,9 +9,17 @@ class BetweenCriteria extends Criteria
 
     public function __construct(string $column, float $min, float $max)
     {
-        parent::__construct($column);
         $this->min = $min;
         $this->max = $max;
+        $this->column = $column;
+    }
+
+    public function getValue()
+    {
+        return [
+            $this->getMin(),
+            $this->getMax(),
+        ];
     }
 
     public function getMin(): float
