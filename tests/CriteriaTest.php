@@ -65,7 +65,7 @@ class CriteriaTest extends TestCase
 
     public function testLogicColumn()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(\Exception::class);
         $crit = new LogicCriteria("or");
         $crit->getColumn();
     }
@@ -86,36 +86,40 @@ class CriteriaTest extends TestCase
         $crit = new CompareCriteria("col", ">=", 2);
         $this->assertEquals($crit->getValue(), 2);
         $this->assertEquals($crit->getColumn(), "col");
-        $this->assertEquals($crit->getOperator(), ">");
+        $this->assertEquals($crit->getOperator(), ">=");
 
         $crit = new CompareCriteria("col", "<=", 3);
         $this->assertEquals($crit->getValue(), 3);
         $this->assertEquals($crit->getColumn(), "col");
-        $this->assertEquals($crit->getOperator(), ">");
+        $this->assertEquals($crit->getOperator(), "<=");
 
         $crit = new CompareCriteria("col", "<", 4);
         $this->assertEquals($crit->getValue(), 4);
         $this->assertEquals($crit->getColumn(), "col");
-        $this->assertEquals($crit->getOperator(), ">");
+        $this->assertEquals($crit->getOperator(), "<");
     }
 
     public function testCompareOperator()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $crit = new CompareCriteria("col", ">", 1);
+        $crit = new CompareCriteria("col", "><", 1);
     }
 
     public function testRegexp()
     {
-        $crit = new RegexpCriteria("column", "%value%");
-        $this->assertEquals($crit->getValue(), "%value%");
+        $crit = new RegexpCriteria("column", "/(\d+)/");
+        $this->assertEquals($crit->getValue(), "/(\d+)/");
         $this->assertEquals($crit->getColumn(), "column");
     }
 
     public function testBetween()
     {
-        $crit = new BetweenCriteria("column", "%value%");
-        $this->assertEquals($crit->getValue(), "%value%");
+        $crit = new BetweenCriteria("column", 10, 20);
+        $value = $crit->getValue();
+        $this->assertEquals($crit->getMin(), 10);
+        $this->assertEquals($crit->getMin(), $value[0]);
+        $this->assertEquals($crit->getMax(), 20);
+        $this->assertEquals($crit->getMax(), $value[1]);
         $this->assertEquals($crit->getColumn(), "column");
     }
 }
