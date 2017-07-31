@@ -6,7 +6,7 @@ class LogicCriteria extends Criteria
 {
     protected $operator;
 
-    public function __construct(string $operator, array $value)
+    public function __construct(string $operator, array $value = [])
     {
         if (in_array($operator, ['or', 'and'])) {
             $this->operator = $operator;
@@ -36,6 +36,6 @@ class LogicCriteria extends Criteria
 
     public function getColumn(): string
     {
-        throw new \Exception("Operator not have column");
+        throw new \Exception("LogicCriteria not have column");
     }
 }
