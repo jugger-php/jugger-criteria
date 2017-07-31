@@ -13,6 +13,12 @@ use jugger\query\criteria\BetweenCriteria;
 
 class MysqlCriteriaBuilderTest extends TestCase
 {
+    protected function createBuilder()
+    {
+        $driver = new \mysqli();
+        return new MysqlCriteriaBuilder($driver);
+    }
+
     public function testGeneral()
     {
 		$criteria = new LogicCriteria("or");
@@ -27,7 +33,7 @@ class MysqlCriteriaBuilderTest extends TestCase
                 new BetweenCriteria('col5', 123, 456),
             ])
         ]);
-        $builder = new MysqlCriteriaBuilder();
+        $builder = $this->createBuilder();
         $sql = $builder->build($criteria);
         $this->assertEquals(
             $sql,
@@ -38,7 +44,7 @@ class MysqlCriteriaBuilderTest extends TestCase
     public function testLike()
     {
         $crit = new LikeCriteria("col", "%value%");
-        $builder = new MysqlCriteriaBuilder();
+        $builder = $this->createBuilder();
         $this->assertEquals(
             $builder->build($crit),
             "`col` LIKE '%value%'"
@@ -52,7 +58,7 @@ class MysqlCriteriaBuilderTest extends TestCase
     public function testEqual()
     {
         $crit = new EqualCriteria("col", "%value%");
-        $builder = new MysqlCriteriaBuilder();
+        $builder = $this->createBuilder();
         $this->assertEquals(
             $builder->build($crit),
             "`col` = '%value%'"
@@ -73,7 +79,7 @@ class MysqlCriteriaBuilderTest extends TestCase
             new EqualCriteria("col", "")
         ]);
 
-        $builder = new MysqlCriteriaBuilder();
+        $builder = $this->createBuilder();
         $this->assertEquals(
             $builder->build($crit),
             "(`col` LIKE '') AND (`col` = '')"
@@ -87,7 +93,7 @@ class MysqlCriteriaBuilderTest extends TestCase
     public function testCompare()
     {
         $crit = new CompareCriteria("col", ">", 1);
-        $builder = new MysqlCriteriaBuilder();
+        $builder = $this->createBuilder();
         $this->assertEquals(
             $builder->build($crit),
             "`col` > '1'"
@@ -101,7 +107,7 @@ class MysqlCriteriaBuilderTest extends TestCase
     public function testRegexp()
     {
         $crit = new RegexpCriteria("col", "/(\d+)/");
-        $builder = new MysqlCriteriaBuilder();
+        $builder = $this->createBuilder();
         $this->assertEquals(
             $builder->build($crit),
             "`col` REGEXP '/(\d+)/'"
@@ -115,7 +121,7 @@ class MysqlCriteriaBuilderTest extends TestCase
     public function testBetween()
     {
         $crit = new BetweenCriteria("col", 10, 20);
-        $builder = new MysqlCriteriaBuilder();
+        $builder = $this->createBuilder();
         $this->assertEquals(
             $builder->build($crit),
             "`col` BETWEEN '10' AND '20'"

@@ -1,0 +1,17 @@
+{
+    "name": "jugger-php/jugger-query",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "irpsv",
+            "email": "i.rpsv@live.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "jugger\\query\\": "src/"
+        }
+    },
+    "require": {}
+}

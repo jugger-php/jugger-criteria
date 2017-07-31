@@ -4,6 +4,13 @@ namespace jugger\query\criteria;
 
 class MysqlCriteriaBuilder extends CriteriaBuilder
 {
+    protected $driver;
+
+    public function __construct(\mysqli $driver)
+    {
+        $this->driver = $driver;
+    }
+
     public function build(Criteria $criteria): string
     {
         $criteriaClass = get_class($criteria);
@@ -34,6 +41,11 @@ class MysqlCriteriaBuilder extends CriteriaBuilder
     public function buildColumn(string $name)
     {
         return "`{$name}`";
+    }
+
+    public function escape(string $value)
+    {
+        return $this->driver->real_escape_string($value);
     }
 
     public function buildLogic(LogicCriteria $criteria)
@@ -96,6 +108,7 @@ class MysqlCriteriaBuilder extends CriteriaBuilder
 
     protected function buildWithOperator($column, $operator, $value)
     {
+        $value = $this->escape($value);
         $column = $this->buildColumn($column);
         return "{$column} {$operator} '{$value}'";
     }
