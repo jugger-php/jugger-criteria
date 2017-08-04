@@ -1,8 +1,8 @@
 <?php
 
-namespace jugger\query\criteria;
+namespace jugger\criteria;
 
-class LikeCriteria extends Criteria
+class EqualCriteria extends Criteria
 {
     public function __construct(string $column, $value)
     {

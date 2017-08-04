@@ -1,6 +1,6 @@
 <?php
 
-namespace jugger\query\criteria;
+namespace jugger\criteria;
 
 class MysqlCriteriaBuilder extends CriteriaBuilder
 {
@@ -53,7 +53,7 @@ class MysqlCriteriaBuilder extends CriteriaBuilder
         $operands = [];
         $operator = strtoupper($criteria->getOperator());
         foreach ($criteria->getValue() as $item) {
-            $sql = (new MysqlCriteriaBuilder)->build($item);
+            $sql = $this->build($item);
             $operands[] = "({$sql})";
         }
         return join($operands, " {$operator} ");

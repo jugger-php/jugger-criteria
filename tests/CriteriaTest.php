@@ -3,12 +3,12 @@
 namespace tests;
 
 use PHPUnit\Framework\TestCase;
-use jugger\query\criteria\LikeCriteria;
-use jugger\query\criteria\LogicCriteria;
-use jugger\query\criteria\EqualCriteria;
-use jugger\query\criteria\RegexpCriteria;
-use jugger\query\criteria\CompareCriteria;
-use jugger\query\criteria\BetweenCriteria;
+use jugger\criteria\LikeCriteria;
+use jugger\criteria\LogicCriteria;
+use jugger\criteria\EqualCriteria;
+use jugger\criteria\RegexpCriteria;
+use jugger\criteria\CompareCriteria;
+use jugger\criteria\BetweenCriteria;
 
 class CriteriaTest extends TestCase
 {

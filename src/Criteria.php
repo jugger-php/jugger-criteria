@@ -1,6 +1,6 @@
 <?php
 
-namespace jugger\query\criteria;
+namespace jugger\criteria;
 
 abstract class Criteria
 {

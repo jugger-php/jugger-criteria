@@ -3,19 +3,19 @@
 namespace tests;
 
 use PHPUnit\Framework\TestCase;
-use jugger\query\criteria\MysqlCriteriaBuilder;
-use jugger\query\criteria\LikeCriteria;
-use jugger\query\criteria\LogicCriteria;
-use jugger\query\criteria\EqualCriteria;
-use jugger\query\criteria\RegexpCriteria;
-use jugger\query\criteria\CompareCriteria;
-use jugger\query\criteria\BetweenCriteria;
+use jugger\criteria\MysqlCriteriaBuilder;
+use jugger\criteria\LikeCriteria;
+use jugger\criteria\LogicCriteria;
+use jugger\criteria\EqualCriteria;
+use jugger\criteria\RegexpCriteria;
+use jugger\criteria\CompareCriteria;
+use jugger\criteria\BetweenCriteria;
 
 class MysqlCriteriaBuilderTest extends TestCase
 {
     protected function createBuilder()
     {
-        $driver = new \mysqli();
+        $driver = new \mysqli('localhost', 'root', '');
         return new MysqlCriteriaBuilder($driver);
     }
 
@@ -37,7 +37,7 @@ class MysqlCriteriaBuilderTest extends TestCase
         $sql = $builder->build($criteria);
         $this->assertEquals(
             $sql,
-            "((`col1` = '1') AND (`col2` LIKE '%2%')) OR ((`col3` REGEXP '(\d+)') AND (`col4` < '4') AND (`col5` BETWEEN '123' AND '456'))"
+            "((`col1` = '1') AND (`col2` LIKE '%2%')) OR ((`col3` REGEXP '(\\\\d+)') AND (`col4` < '4') AND (`col5` BETWEEN '123' AND '456'))"
         );
     }
 
@@ -106,11 +106,11 @@ class MysqlCriteriaBuilderTest extends TestCase
 
     public function testRegexp()
     {
-        $crit = new RegexpCriteria("col", "/(\d+)/");
+        $crit = new RegexpCriteria("col", "/(\\d+)/");
         $builder = $this->createBuilder();
         $this->assertEquals(
             $builder->build($crit),
-            "`col` REGEXP '/(\d+)/'"
+            "`col` REGEXP '/(\\\\d+)/'"
         );
         $this->assertEquals(
             $builder->buildRegexp($crit),
