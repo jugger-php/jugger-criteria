@@ -1,5 +1,5 @@
 {
-    "name": "jugger-php/jugger-query",
+    "name": "jugger-php/jugger-criteria",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -10,7 +10,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "jugger\\query\\": "src/"
+            "jugger\\criteria\\": "src/"
         }
     },
     "require": {}
