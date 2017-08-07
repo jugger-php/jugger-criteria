@@ -14,11 +14,16 @@ class SimpleLogicCriteria extends LogicCriteria
 
         $newCriterias = [];
         foreach ($criterias as $key => $value) {
-            if (is_integer($key) && is_array($value)) {
-                $newCriterias[] = new SimpleLogicCriteria($value);
-            }
-            elseif (is_integer($key)) {
-                throw new \Exception("Invalide value criteria ". var_export($value, true));
+            if (is_integer($key)) {
+                if (is_array($value)) {
+                    $newCriterias[] = new SimpleLogicCriteria($value);
+                }
+                elseif ($value instanceof Criteria) {
+                    $newCriterias[] = $value;
+                }
+                else {
+                    throw new \Exception("Invalide value criteria ". var_export($value, true));
+                }
             }
             else {
                 list($operator, $column) = $this->parseOperatorFromKey($key);
