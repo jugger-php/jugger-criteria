@@ -8,12 +8,12 @@ class CompareCriteria extends Criteria
 
     public function __construct(string $column, string $operator, $value)
     {
-        $operators = ['>', '>=', '<', '<=', '<>', '!='];
+        $operators = ['>', '>=', '<', '<=', '<>', '!=', '!'];
         if (in_array($operator, $operators)) {
             $this->operator = $operator;
         }
         else {
-            throw new \InvalidArgumentException("Operator must be '>', '>=', '<', '<=', '<>', '!='");
+            throw new \InvalidArgumentException("Invalide operator '{$operator}'. Operator must be '". join("', '", $operators) ."'");
         }
         parent::__construct($column, $value);
     }
