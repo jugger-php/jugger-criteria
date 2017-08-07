@@ -4,6 +4,8 @@ namespace tests;
 
 use PHPUnit\Framework\TestCase;
 use jugger\criteria\MysqlCriteriaBuilder;
+use jugger\criteria\SimpleLogicCriteria;
+use jugger\criteria\InCriteria;
 use jugger\criteria\LikeCriteria;
 use jugger\criteria\LogicCriteria;
 use jugger\criteria\EqualCriteria;
@@ -128,6 +130,48 @@ class MysqlCriteriaBuilderTest extends TestCase
         );
         $this->assertEquals(
             $builder->buildBetween($crit),
+            $builder->build($crit)
+        );
+    }
+
+    public function testSimpleCriteria()
+    {
+        $crit = new SimpleLogicCriteria([
+            'column1' => 'value',
+            [
+                'or',
+                '%column2' => 'value',
+                '@column3' => [1,2,3],
+            ]
+        ]);
+        $builder = $this->createBuilder();
+        $this->assertEquals(
+            $builder->build($crit),
+            "(`column1` = 'value') AND ((`column2` LIKE 'value') OR (`column3` IN (1, 2, 3)))"
+        );
+    }
+
+    public function testIn()
+    {
+        $crit = new InCriteria("column", [1,2,3]);
+        $builder = $this->createBuilder();
+        $this->assertEquals(
+            $builder->build($crit),
+            "`column` IN (1, 2, 3)"
+        );
+        $this->assertEquals(
+            $builder->buildIn($crit),
+            $builder->build($crit)
+        );
+
+        $crit = new InCriteria("column", "string");
+        $builder = $this->createBuilder();
+        $this->assertEquals(
+            $builder->build($crit),
+            "`column` IN (string)"
+        );
+        $this->assertEquals(
+            $builder->buildIn($crit),
             $builder->build($crit)
         );
     }

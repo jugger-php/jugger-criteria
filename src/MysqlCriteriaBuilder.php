@@ -13,28 +13,30 @@ class MysqlCriteriaBuilder extends CriteriaBuilder
 
     public function build(Criteria $criteria): string
     {
-        $criteriaClass = get_class($criteria);
-        switch ($criteriaClass) {
-            case BetweenCriteria::class:
-                return $this->buildBetween($criteria);
-
-            case CompareCriteria::class:
-                return $this->buildCompare($criteria);
-
-            case EqualCriteria::class:
-                return $this->buildEqual($criteria);
-
-            case LikeCriteria::class:
-                return $this->buildLike($criteria);
-
-            case LogicCriteria::class:
-                return $this->buildLogic($criteria);
-
-            case RegexpCriteria::class:
-                return $this->buildRegexp($criteria);
-
-            default:
-                throw new \Exception("Not found class of criteria as '{$criteriaClass}'");
+        if ($criteria instanceof BetweenCriteria) {
+            return $this->buildBetween($criteria);
+        }
+        else if ($criteria instanceof CompareCriteria) {
+            return $this->buildCompare($criteria);
+        }
+        else if ($criteria instanceof EqualCriteria) {
+            return $this->buildEqual($criteria);
+        }
+        else if ($criteria instanceof LikeCriteria) {
+            return $this->buildLike($criteria);
+        }
+        else if ($criteria instanceof LogicCriteria) {
+            return $this->buildLogic($criteria);
+        }
+        else if ($criteria instanceof InCriteria) {
+            return $this->buildIn($criteria);
+        }
+        else if ($criteria instanceof RegexpCriteria) {
+            return $this->buildRegexp($criteria);
+        }
+        else {
+            $criteriaClass = get_class($criteria);
+            throw new \Exception("Not found class of criteria as '{$criteriaClass}'");
         }
     }
 
@@ -104,6 +106,24 @@ class MysqlCriteriaBuilder extends CriteriaBuilder
             "REGEXP",
             $criteria->getValue()
         );
+    }
+
+    public function buildIn(InCriteria $criteria)
+    {
+        $column = $this->buildColumn(
+            $criteria->getColumn()
+        );
+        $value = $criteria->getValue();
+        if (is_array($value)) {
+            $value = join(
+                ", ",
+                array_map([$this, 'escape'], $value)
+            );
+        }
+        else {
+            $value = $this->escape($value);
+        }
+        return "{$column} IN ({$value})";
     }
 
     protected function buildWithOperator($column, $operator, $value)
