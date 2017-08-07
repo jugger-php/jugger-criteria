@@ -8,7 +8,7 @@ class CompareCriteria extends Criteria
 
     public function __construct(string $column, string $operator, $value)
     {
-        $operators = ['>', '>=', '<', '<=', '<>', '!=', '!'];
+        $operators = ['>', '>=', '<', '<=', '<>', '!='];
         if (in_array($operator, $operators)) {
             $this->operator = $operator;
         }
