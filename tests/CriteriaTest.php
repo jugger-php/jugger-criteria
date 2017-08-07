@@ -3,6 +3,7 @@
 namespace tests;
 
 use PHPUnit\Framework\TestCase;
+use jugger\criteria\InCriteria;
 use jugger\criteria\LikeCriteria;
 use jugger\criteria\LogicCriteria;
 use jugger\criteria\EqualCriteria;
@@ -120,6 +121,17 @@ class CriteriaTest extends TestCase
         $this->assertEquals($crit->getMin(), $value[0]);
         $this->assertEquals($crit->getMax(), 20);
         $this->assertEquals($crit->getMax(), $value[1]);
+        $this->assertEquals($crit->getColumn(), "column");
+    }
+
+    public function testIn()
+    {
+        $crit = new InCriteria("column", "string");
+        $this->assertEquals($crit->getValue(), "string");
+        $this->assertEquals($crit->getColumn(), "column");
+
+        $crit = new InCriteria("column", [1,2,3]);
+        $this->assertTrue($crit->getValue() == [1,2,3]);
         $this->assertEquals($crit->getColumn(), "column");
     }
 }
