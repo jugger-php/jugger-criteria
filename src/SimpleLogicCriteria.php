@@ -6,9 +6,9 @@ class SimpleLogicCriteria extends LogicCriteria
 {
     public function __construct(array $criterias)
     {
-        $operator = "and";
+        $logicOperator = "and";
         if (isset($criterias[0]) && is_scalar($criterias[0])) {
-            $operator = strtolower($criterias[0]) == 'or' ? 'or' : 'and';
+            $logicOperator = strtolower($criterias[0]) == 'or' ? 'or' : 'and';
             unset($criterias[0]);
         }
 
@@ -21,25 +21,25 @@ class SimpleLogicCriteria extends LogicCriteria
                 throw new \Exception("Invalide value criteria ". var_export($value, true));
             }
             else {
-                $operator = $this->parseOperatorFromKey($key);
-                $newCriterias[] = $this->createCriteriaFromOperator($operator, $value);
+                list($operator, $column) = $this->parseOperatorFromKey($key);
+                $newCriterias[] = $this->createCriteriaFromOperator($operator, $column, $value);
             }
         }
-        parent::__construct($operator, $newCriterias);
+        parent::__construct($logicOperator, $newCriterias);
     }
 
     public function parseOperatorFromKey(string $key)
     {
         $operators = [
-            '><', '>=', '<=', '!=', '<>', '<', '!', '>', '=', '@', '%',
+            '><', '>=', '<=', '!=', '<>', '<', '!', '>', '=', '@', '%', '#'
         ];
         $operators = join($operators, "|");
         $regexp = "/^({$operators})(.+)$/";
         if (preg_match($regexp, $key, $m)) {
-            return $m[0];
+            return [$m[1], $m[2]];
         }
         else {
-            return "=";
+            return ["=", $key];
         }
     }
 
@@ -58,15 +58,19 @@ class SimpleLogicCriteria extends LogicCriteria
             case '><':
                 return new BetweenCriteria($column, $value[0], $value[1]);
 
+            case '#':
+                return new RegexpCriteria($column, $value);
+
             case '>=':
             case '>':
             case '<=':
             case '<':
             case '<>':
-                return new CompareCriteria($operator, $column, $value);
+            case '!=':
+                return new CompareCriteria($column, $operator, $value);
 
             case '!':
-                return new CompareCriteria("!=", $column, $value);
+                return new CompareCriteria($column, "!=", $value);
 
             default:
                 throw new \Exception("Not found operator '{$operator}' for column '{$column}'");
