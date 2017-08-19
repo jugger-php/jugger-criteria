@@ -52,7 +52,12 @@ class SimpleLogicCriteria extends LogicCriteria
     {
         switch ($operator) {
             case '=':
-                return new EqualCriteria($column, $value);
+                if (is_array($value)) {
+                    return new InCriteria($column, $value);
+                }
+                else {
+                    return new EqualCriteria($column, $value);
+                }
 
             case '@':
                 return new InCriteria($column, $value);
