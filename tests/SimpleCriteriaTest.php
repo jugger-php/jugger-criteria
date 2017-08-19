@@ -202,16 +202,27 @@ class SimpleCriteriaTest extends TestCase
         $crit = new SimpleLogicCriteria([
             '@column1' => [1,2,3],
             '@column2' => "string",
+            // alias
+            'column3' => [1,2,3],
+            '=column4' => [1,2,3],
         ]);
         $values = $crit->getValue();
-        $this->assertTrue(count($values) == 2);
+        $this->assertEquals(count($values), 4);
 
-        $this->assertTrue($values[0]->getValue() == [1,2,3]);
+        $this->assertEquals($values[0]->getValue(), [1,2,3]);
         $this->assertEquals($values[0]->getColumn(), "column1");
         $this->assertInstanceOf(InCriteria::class, $values[0]);
 
         $this->assertEquals($values[1]->getValue(), "string");
         $this->assertEquals($values[1]->getColumn(), "column2");
         $this->assertInstanceOf(InCriteria::class, $values[1]);
+
+        $this->assertEquals($values[2]->getValue(), [1,2,3]);
+        $this->assertEquals($values[2]->getColumn(), "column3");
+        $this->assertInstanceOf(InCriteria::class, $values[2]);
+
+        $this->assertEquals($values[3]->getValue(), [1,2,3]);
+        $this->assertEquals($values[3]->getColumn(), "column4");
+        $this->assertInstanceOf(InCriteria::class, $values[3]);
     }
 }
