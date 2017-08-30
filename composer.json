@@ -1,6 +1,6 @@
 {
     "name": "jugger-php/jugger-criteria",
-    "type": "library",
+    "description": "Critrias for filtering",
     "license": "MIT",
     "authors": [
         {
@@ -13,5 +13,7 @@
             "jugger\\criteria\\": "src/"
         }
     },
-    "require": {}
+    "require": {
+        "php": "7.1.*"
+    }
 }
